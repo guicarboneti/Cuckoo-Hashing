@@ -1,13 +1,21 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 #include "hash.h"
 
-void inicializa_tabela(TabHash *T) {
-  for (int i = 0; i < M; i++) {
-    T[i].key = 0;
-    T[i].value = 0;
-    T[i].excluida = 0;
+// Inicializa a tabela hash com tamanho M e define todas as posições como vazias
+TabHash *inicializa_tabela(void) {
+  TabHash* hash = (TabHash*) malloc(M * sizeof(TabHash));
+  if (hash == NULL) {
+      printf("Error: memory allocation.\n");
+      exit(1);
   }
+  for (int i = 0; i < M; i++) {
+    hash[i].key = 0;
+    hash[i].value = 0;
+    hash[i].excluida = 0;
+  }
+  return hash;
 }
 
 int h1(int k) {
@@ -15,10 +23,11 @@ int h1(int k) {
 }
 
 int h2(int k) {
-  return floor(M * (k * 0.9 - floor(k*0.9)));
+  double frac_part = k * 0.9 - floor(k * 0.9);
+  return (int)(M * frac_part);
 }
 
-// retorna o valor correspondente à chave k
+// Busca pela chave k nas tabelas T1 e T2. Retorna o valor correspondente ou -1 se não encontrar
 int busca(int k, TabHash *T1, TabHash *T2) {
   if (T1[h1(k)].key == 0 && T1[h1(k)].excluida == 0)
     return -1; // chave não existe
@@ -30,6 +39,7 @@ int busca(int k, TabHash *T1, TabHash *T2) {
   else return -1;
 }
 
+// Insere a chave k em T1. Se houver colisão, move a chave antiga para T2 e insere a nova em T1
 int insere (int k, TabHash *T1, TabHash *T2) {
   if (T1[h1(k)].key == 0 || T1[h1(k)].excluida == 1) {
     T1[h1(k)].key = k;
@@ -48,6 +58,7 @@ int insere (int k, TabHash *T1, TabHash *T2) {
   return 0;
 }
 
+// Exclui a chave k das tabelas. Marca como "excluída" em T1 se necessário
 int exclui (int k, TabHash *T1, TabHash *T2) {
   if (T2[h2(k)].key == k) {
     T2[h2(k)].key = 0;
@@ -58,4 +69,5 @@ int exclui (int k, TabHash *T1, TabHash *T2) {
     T1[h1(k)].value = 0;
     T1[h1(k)].excluida = 1;
   }
+  return 0;
 }

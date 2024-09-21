@@ -2,17 +2,13 @@
 #define _HASH_H
 #define M 11
 
-typedef struct TabHash
-{
+typedef struct TabHash {
     int key;
     int value;
     int excluida;
 } TabHash;
 
-TabHash T1[M];
-TabHash T2[M];
-
-void inicializa_tabela(TabHash *T);
+TabHash *inicializa_tabela(void);
 
 // função hash , onde k é a chave inteira
 int h1(int k);

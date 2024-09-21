@@ -19,21 +19,21 @@ void executa_entrada(TabHash *T1, TabHash *T2) {
 }
 
 // armazena o resultado final das operacoes
-void saida(Saida *s, TabHash *T1, TabHash *T2, int *tam_saida) {
+void saida(Saida *saidas , TabHash *T1, TabHash *T2, int *tam_saida) {
     int i, j=0;
     for(i=0; i<M; i++) {
         if (T1[i].key != 0) {
-            saidas[j].key = T1[i].key;
-            strcpy(saidas[j].table, "T1");
-            saidas[j].value = T1[i].value;
+            saidas [j].key = T1[i].key;
+            strcpy(saidas [j].table, "T1");
+            saidas [j].value = T1[i].value;
             j++;
         }
     }
     for(i=0; i<M; i++) {
         if (T2[i].key != 0) {
-            saidas[j].key = T2[i].key;
-            strcpy(saidas[j].table, "T2");
-            saidas[j].value = T2[i].value;
+            saidas [j].key = T2[i].key;
+            strcpy(saidas [j].table, "T2");
+            saidas [j].value = T2[i].value;
             j++;
         }
     }
@@ -42,8 +42,8 @@ void saida(Saida *s, TabHash *T1, TabHash *T2, int *tam_saida) {
 
 // função de comparação usada na ordenação
 int compara(const void *a, const void *b) {
-    Saida *saidaA = (Saida *)a;
-    Saida *saidaB = (Saida *)b;
+    const Saida *saidaA = (const Saida *)a;
+    const Saida *saidaB = (const Saida *)b;
 
     if (saidaA->key != saidaB->key)
         return saidaA->key - saidaB->key;
@@ -55,11 +55,11 @@ int compara(const void *a, const void *b) {
     return saidaA->value - saidaB->value;
 }
 
-void ordena_saida(Saida *saidas, int n) {
-    qsort(saidas, n, sizeof(Saida), compara);
+void ordena_saida(Saida *saidas , int n) {
+    qsort(saidas, (size_t)n, sizeof(Saida), compara);
 }
 
-void imprime_saida(Saida saidas[], int n) {
+void imprime_saida(Saida saidas [], int n) {
     for (int i = 0; i < n; i++)
-        printf("%d,%s,%d\n", saidas[i].key, saidas[i].table, saidas[i].value);
+        printf("%d,%s,%d\n", saidas [i].key, saidas [i].table, saidas [i].value);
 }
